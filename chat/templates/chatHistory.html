@@ -1,0 +1,46 @@
+<html>
+<head>
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <style>div{margin: 25px;}</style>
+</head>
+<body>
+    <script>
+    function myFunction()
+    {
+        var x;
+        if (chat.sentFrom==user) 
+        {
+            x=chat.sentTo;
+        }
+        else
+        {
+            x=chat.sentFrom;
+        }
+        return x;
+    }
+</script>
+    <h1>Chat History</h1>
+    <table class="table table-hover">
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Last Chatted At</th>
+            <th>Message</th>
+            <th>Chat Now</th>
+        </tr>
+        {% for chat in chats %}
+        <tr> 
+            <td>{{ chat.sentFrom }}</td>
+            <td>{{ chat.sentTo }}</td>
+            <td>{{ chat.created_date }}</td>
+            <td>{{ chat.message }}</td>
+            <td><a class="btn btn-default" href="{% url 'chatNow' name=myFunction() %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p>Create a new team</p>
+    <a href="{% url 'enterTeamDetails' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span>new</a>
+    {% block content %}{% endblock %}
+</body>
+</html>
