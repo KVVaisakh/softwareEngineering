@@ -5,8 +5,26 @@
 	<style>div{margin: 25px;}</style>
 </head>
 <body>
-{% load crispy_forms_tags %}
 <h2>Chat</h2>
+{% if chats %}
+    <table class="table table-hover">
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Time</th>
+            <th>Message</th>
+        </tr>
+        {% for chat in chats %}
+        <tr> 
+            <td>{{ chat.sentFrom }}</td>
+            <td>{{ chat.sentTo }}</td>
+            <td>{{ chat.created_date }}</td>
+            <td>{{ chat.message }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+{% load crispy_forms_tags %}
 <form method="POST" class="post-form">
 	{% csrf_token %}
     {{ form|crispy }}

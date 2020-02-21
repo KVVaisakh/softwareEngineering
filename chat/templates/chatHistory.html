@@ -5,28 +5,14 @@
     <style>div{margin: 25px;}</style>
 </head>
 <body>
-    <script>
-    function myFunction()
-    {
-        var x;
-        if (chat.sentFrom==user) 
-        {
-            x=chat.sentTo;
-        }
-        else
-        {
-            x=chat.sentFrom;
-        }
-        return x;
-    }
-</script>
     <h1>Chat History</h1>
+    {{user}}
     <table class="table table-hover">
         <tr>
             <th>From</th>
             <th>To</th>
             <th>Last Chatted At</th>
-            <th>Message</th>
+            <th>Last Message</th>
             <th>Chat Now</th>
         </tr>
         {% for chat in chats %}
@@ -35,12 +21,34 @@
             <td>{{ chat.sentTo }}</td>
             <td>{{ chat.created_date }}</td>
             <td>{{ chat.message }}</td>
-            <td><a class="btn btn-default" href="{% url 'chatNow' name=myFunction() %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            {% if  chat.sentFrom == user %}
+            <td><a class="btn btn-default" href="{% url 'continueChat' name=chat.sentTo %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            {% else %}
+            <td><a class="btn btn-default" href="{% url 'continueChat' name=chat.sentFrom %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>
-    <p>Create a new team</p>
-    <a href="{% url 'enterTeamDetails' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span>new</a>
-    {% block content %}{% endblock %}
+    <a href="{% url 'chatNow' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span>new</a>
+    <table class="table table-hover">
+        <tr>
+            <th>From</th>
+            <th>Team</th>
+            <th>Last Chatted At</th>
+            <th>Last Message</th>
+            <th>Chat Now</th>
+        </tr>
+        {% for team in groupChats %}
+            {% for chat in team %}
+            <tr> 
+                <td>{{ chat.sentFrom }}</td>
+                <td>{{ chat.sentTo }}</td>
+                <td>{{ chat.created_date }}</td>
+                <td>{{ chat.message }}</td>
+                <td><a class="btn btn-default" href="{% url 'continueGroupChat' name=chat.sentTo %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
 </body>
 </html>

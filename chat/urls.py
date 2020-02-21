@@ -3,5 +3,6 @@ from chat import views
 
 urlpatterns = [
 	path('', views.index, name='index'),
-	path('<str:name>/chatNow', views.chatNow, name='chatNow')
+	path('continueChat/<str:name>', views.continueChat, name='continueChat'),
+	path('chatNow', views.chatNow, name='chatNow')
 ]
