@@ -19,6 +19,9 @@ class GroupMessage(models.Model):
 	message  = models.CharField(max_length=200)
 	created_date = models.DateTimeField(default=timezone.now)
 
+	# class Meta:
+ #        order_with_respect_to = '-created_date'
+
 	def __str__(self):
 		title=str(self.created_date)+" "+str(self.sentFrom)+" "+str(self.sentTo)
 		return title

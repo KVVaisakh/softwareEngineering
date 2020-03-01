@@ -4,5 +4,7 @@ from chat import views
 urlpatterns = [
 	path('', views.index, name='index'),
 	path('continueChat/<str:name>', views.continueChat, name='continueChat'),
-	path('chatNow', views.chatNow, name='chatNow')
+	path('continueGroupChat/<str:name>', views.continueGroupChat, name='continueGroupChat'),
+	path('chatNow', views.chatNow, name='chatNow'),
+	path('groupChatNow', views.groupChatNow, name='groupChatNow'),
 ]

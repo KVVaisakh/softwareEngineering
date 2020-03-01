@@ -7,6 +7,8 @@
 <body>
     <h1>Chat History</h1>
     {{user}}
+    <h2>Personal Chat</h2>
+    <a href="{% url 'chatNow' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span>new</a>
     <table class="table table-hover">
         <tr>
             <th>From</th>
@@ -29,7 +31,9 @@
         </tr>
         {% endfor %}
     </table>
-    <a href="{% url 'chatNow' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span>new</a>
+
+    <h2>Group Chat</h2>
+    <a href="{% url 'groupChatNow' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span>new</a>
     <table class="table table-hover">
         <tr>
             <th>From</th>

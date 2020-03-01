@@ -12,7 +12,7 @@ class GroupMessageForm(forms.ModelForm):
 
     class Meta:
         model = GroupMessage
-        fields = ('message',)
+        fields = ('sentTo','message',)
 
 class UsernameForm(forms.ModelForm):
 
