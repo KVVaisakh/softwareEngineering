@@ -8,11 +8,11 @@
 </head>
 <body>
 {% load crispy_forms_tags %}
-<h2>Add Members</h2>
+<h2>Add Tasks</h2>
 <form method="POST" class="post-form">
 	{% csrf_token %}
-	{{ forms.memberForms.management_form }}
-	{% for form in forms.memberForms %}
+	{{ forms.timelineForms.management_form }}
+	{% for form in forms.timelineForms %}
 		<div class="link-formset">{{ form|crispy }}
 		</div>
 	{% endfor %}    
@@ -20,8 +20,8 @@
 </form>
 <script>
     $('.link-formset').formset({
-        addText: 'Add Members',
-        deleteText: 'Remove Member'
+        addText: 'Add task',
+        deleteText: 'Remove task'
     });
 </script>
 </body>

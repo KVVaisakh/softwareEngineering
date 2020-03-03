@@ -6,16 +6,11 @@
 </head>
 <body>
 {% load crispy_forms_tags %}
-    <div class="post">
-        {% if team.created_date %}
-            <div class="date">
-                {{ team.created_date }}
-            </div>
-        {% endif %}
-        <a class="btn btn-default" href="{% url 'teamEdit' pk=team.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-        <h1>{{ team.teamName }}</h1>
-        <p>{{ team.directoryLink }}</p>
-        <p></p>
-    </div>
+    <form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Save</button>
+</script>
+</form>
 </body>
 </html>

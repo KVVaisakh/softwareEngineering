@@ -23,3 +23,16 @@ class TeamMember(models.Model):
     def __str__(self):
     	title=str(self.userName)+" - "+str(self.teamName)
     	return title
+
+class Timeline(models.Model):
+    teamName = models.ForeignKey(Team,on_delete=models.CASCADE)
+    deadline = models.DateTimeField(default=timezone.now)
+    task = models.CharField(unique=True,max_length=50)
+    taskDetails = models.CharField(unique=True,max_length=200)
+
+    class Meta:
+        unique_together = (('teamName', 'task'),)
+
+    def __str__(self):
+        title=str(self.task)+" - "+str(self.teamName)
+        return title
