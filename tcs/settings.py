@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'team.apps.TeamConfig',
     'chat.apps.ChatConfig',
+    'upload.apps.UploadConfig',
     'bootstrap4',
     'crispy_forms',
 ]
