@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from . import models
-from .models import Team,TeamMember,Timeline
+from .models import Team,Role,TeamMember,Timeline
 from django.contrib.auth.models import User
 from django import forms
 from django.forms import modelformset_factory
@@ -28,14 +28,15 @@ def newTeam(request):
 			team.created_date=timezone.now()
 			team.teamLeader=request.user
 			team.save()
-			form2 = TeamMemberForm({'userName':request.user,'role':'teamLeader'})
+			form2 = TeamMemberForm({'userName':request.user,'role':models.Role.objects.get(role='Team Leader')})
 			if form2.is_valid():
 				teamMembers=form2.save(commit=False)
 				teamMembers.teamName=Team.objects.get(teamName=team.teamName)
 				teamMembers.save()
 				return redirect('addMembers',name=team.teamName)
 	else:
-		form = TeamForm()
+		form = TeamForm(initial={'teamLeader':request.user})
+		form.fields['teamLeader'].widget = forms.HiddenInput()
 	return render(request, 'newTeam.html', {'form': form})
 
 def addMembers(request,name):	
@@ -66,17 +67,33 @@ def viewMembers(request,name):
 
 def editTeam(request, name):
     team = get_object_or_404(models.Team, teamName=name)
+    oldTeamLeader=team.teamLeader
     if request.method == "POST":
         form = TeamForm(request.POST,instance=team)
         if form.is_valid():
         	newTeam = form.save(commit=False)
         	newTeam.save()
-        	memberList = models.TeamMember.objects.filter(teamName=name)
-        	for member in memberList:
-        		member.teamName=Team.objects.get(teamName=newTeam.teamName)
-        		member.save()
-        	team = models.Team.objects.get(teamName=name)
-        	team.delete()
+        	if team.teamName!=newTeam.teamName:
+	        	memberList = models.TeamMember.objects.filter(teamName=name)
+	        	for member in memberList:
+	        		member.teamName=Team.objects.get(teamName=newTeam.teamName)
+	        		member.save()
+	        	team = models.Team.objects.get(teamName=name)	
+        		team.delete()
+        	if oldTeamLeader!=newTeam.teamLeader:
+        		print("leader changed")
+        		leader = models.TeamMember.objects.filter(Q(teamName=newTeam.teamName) & Q(userName=request.user))
+        		leader.delete()
+        		existingMember=models.TeamMember.objects.get(Q(userName=newTeam.teamLeader) & Q(teamName=newTeam.teamName))
+        		if existingMember:
+        			existingMember.role=models.Role.objects.get(role='Team Leader')
+        			existingMember.save()
+        		else:
+	        		form2 = TeamMemberForm({'userName':newTeam.teamLeader,'role':models.Role.objects.get(role='Team Leader')})
+	        		if form2.is_valid():
+	        			teamMembers=form2.save(commit=False)
+	        			teamMembers.teamName=Team.objects.get(teamName=newTeam.teamName)
+	        			teamMembers.save()
         	return redirect('team')
     else:
         form = TeamForm(instance=team)

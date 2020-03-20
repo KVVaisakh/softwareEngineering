@@ -1,5 +1,6 @@
 from django.urls import path
 from team import views
+from django.urls import path,include
 
 urlpatterns = [
     path('', views.index, name='team'),
@@ -10,4 +11,5 @@ urlpatterns = [
     path('<str:name>/viewTimeline', views.viewTimeline, name='viewTimeline'),
     path('<str:name>/viewMembers',views.viewMembers, name='viewMembers'),
     path('<str:name>/view/', views.viewTeam, name='viewTeam'),
+    path('<str:name>/<str:task>/upload/', include('upload.urls'),name='upload'),
 ]

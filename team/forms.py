@@ -5,7 +5,7 @@ class TeamForm(forms.ModelForm):
 
     class Meta:
         model = Team
-        fields = ('teamName', 'directoryLink',)
+        fields = ('teamName', 'directoryLink','teamLeader')
 
 class TeamMemberForm(forms.ModelForm):
 

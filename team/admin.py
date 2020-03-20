@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Team,TeamMember,Timeline
+from .models import *
 
 admin.site.register(Team)
 admin.site.register(TeamMember)
 admin.site.register(Timeline)
+admin.site.register(Role)

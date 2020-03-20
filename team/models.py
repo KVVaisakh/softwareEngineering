@@ -12,13 +12,20 @@ class Team(models.Model):
     def __str__(self):
         return self.teamName
 
+class Role(models.Model):
+	role = models.CharField(primary_key=True,max_length=200)
+
+	def __str__(self):
+		return self.role
+
 class TeamMember(models.Model):
     teamName = models.ForeignKey(Team,on_delete=models.CASCADE)
     userName = models.ForeignKey(User,on_delete=models.CASCADE)
-    role = models.CharField(max_length=200)
+    role = models.ForeignKey(Role,on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (('teamName', 'userName'),)
+        unique_together = (('teamName', 'role'), )
 
     def __str__(self):
     	title=str(self.userName)+" - "+str(self.teamName)
@@ -27,8 +34,8 @@ class TeamMember(models.Model):
 class Timeline(models.Model):
     teamName = models.ForeignKey(Team,on_delete=models.CASCADE)
     deadline = models.DateTimeField(default=timezone.now)
-    task = models.CharField(unique=True,max_length=50)
-    taskDetails = models.CharField(unique=True,max_length=200)
+    task = models.CharField(max_length=50)
+    taskDetails = models.CharField(max_length=200)
 
     class Meta:
         unique_together = (('teamName', 'task'),)
