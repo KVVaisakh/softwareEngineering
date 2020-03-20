@@ -26,5 +26,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('team/', include('team.urls')),
     path('chat/', include('chat.urls')),
-    path('upload/<str:name>/<str:task>/', include('upload.urls'), name='upload'),
 ]
