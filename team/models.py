@@ -25,7 +25,6 @@ class TeamMember(models.Model):
 
     class Meta:
         unique_together = (('teamName', 'userName'),)
-        unique_together = (('teamName', 'role'), )
 
     def __str__(self):
     	title=str(self.userName)+" - "+str(self.teamName)

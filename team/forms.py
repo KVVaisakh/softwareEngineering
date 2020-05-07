@@ -1,5 +1,7 @@
 from django import forms
-from .models import Team,TeamMember,Timeline
+from .models import *
+from django.db.models import Q
+from django.forms import ModelChoiceField
 
 class TeamForm(forms.ModelForm):
 
@@ -8,10 +10,10 @@ class TeamForm(forms.ModelForm):
         fields = ('teamName', 'directoryLink','teamLeader')
 
 class TeamMemberForm(forms.ModelForm):
-
-    class Meta:
-        model = TeamMember
-        fields = ('userName', 'role',)
+	Role = ModelChoiceField(queryset=Role.objects.filter(~Q(role='Team Leader')), empty_label=None)
+	class Meta:
+		model = TeamMember
+		fields = ('userName',)
 
 class TimelineForm(forms.ModelForm):
 

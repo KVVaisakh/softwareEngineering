@@ -21,13 +21,13 @@
 	        <td>{{ team.directoryLink }}</td>
 	        <td>{{ team.created_date }}</td>
 	        {% if  team.teamLeader == user %}
-	        <td><a class="btn btn-default" href="{% url 'addMembers' name=team.teamName %}"><span class="lyphicon glyphicon-plus"></span></a></td>
-	        <td><a class="btn btn-default" href="{% url 'editTeam' name=team.teamName %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
-	        <td><a class="btn btn-default" href="{% url 'editTimeline' name=team.teamName %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+	        <td><a class="btn btn-default" href="{% url 'addMembers' team=team.teamName %}"><span class="lyphicon glyphicon-plus"></span></a></td>
+	        <td><a class="btn btn-default" href="{% url 'editTeam' team=team.teamName %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+	        <td><a class="btn btn-default" href="{% url 'editTimeline' team=team.teamName %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
 	        {% else %}
-	        <td><a class="btn btn-default" href="{% url 'viewMembers' name=team.teamName %}"><span class="lyphicon glyphicon-plus"></span></a></td>
-	        <td><a class="btn btn-default" href="{% url 'viewTeam' name=team.teamName %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
-	        <td><a class="btn btn-default" href="{% url 'viewTimeline' name=team.teamName %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+	        <td><a class="btn btn-default" href="{% url 'viewMembers' team=team.teamName %}"><span class="lyphicon glyphicon-plus"></span></a></td>
+	        <td><a class="btn btn-default" href="{% url 'viewTeam' team=team.teamName %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+	        <td><a class="btn btn-default" href="{% url 'viewTimeline' team=team.teamName %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
 	        {% endif %}	        
 	    </tr>
 	    {% endfor %}
