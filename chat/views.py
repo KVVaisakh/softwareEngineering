@@ -8,7 +8,10 @@ from django.db.models import Q
 from .forms import UsernameForm,DirectMessageForm,GroupMessageForm
 from django import forms
 from team.models import TeamMember
+from django.contrib.auth.decorators import login_required
+from tcs.decorators import *
 
+@login_required
 def index(request):
 	chats=models.DirectMessage.objects.filter(Q(sentFrom=request.user) |  Q(sentTo=request.user)).order_by('created_date').reverse()
 	chatList=[]
@@ -33,6 +36,7 @@ def index(request):
 		groupChats.append(models.GroupMessage.objects.filter(Q(sentTo=team)).order_by('-created_date')[:1])
 	return render(request, 'chatHistory.html', {'chats':chatList, 'groupChats':groupChats, 'user':request.user})
 
+@login_required
 def chatNow(request):
 	if request.method == "POST":
 		form = DirectMessageForm(request.POST)
@@ -46,6 +50,8 @@ def chatNow(request):
 		form=DirectMessageForm()
 	return render(request, 'message.html', {'form': form})
 
+@login_required
+@userIsMember
 def groupChatNow(request):
 	if request.method == "POST":
 		form = GroupMessageForm(request.POST)
@@ -59,6 +65,7 @@ def groupChatNow(request):
 		form=GroupMessageForm()
 	return render(request, 'message.html', {'form': form})
 
+@login_required
 def continueChat(request,name):
 	if request.method == "POST":
 		form = DirectMessageForm(request.POST)
@@ -75,6 +82,8 @@ def continueChat(request,name):
 		form.fields['sentTo'].widget = forms.HiddenInput()
 	return render(request, 'message.html', {'form': form,'chats':chats,'name':name})
 
+@login_required
+@userIsMember
 def continueGroupChat(request,name):
 	if request.method == "POST":
 		form = GroupMessageForm(request.POST)
