@@ -6,7 +6,7 @@ from django import forms
 from .forms import UserRegistrationForm
 
 def index(request):
-    return render(request, 'home.html', {})
+    return render(request, 'home1.html', {})
 
 def register(request):
 	if request.method == 'POST':

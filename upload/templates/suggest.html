@@ -5,13 +5,13 @@
 	<style>div{margin: 25px;}</style>
 </head>
 <body>
-<h2>Upload</h2>
+<h2>Suggest</h2>
 {% load crispy_forms_tags %}
 
 <form method="POST" enctype="multipart/form-data">
 	{% csrf_token %}
     {{ form|crispy }}
-    <button type="submit" class="btn btn-success">Upload</button>
+    <button type="submit" class="btn btn-success">Suggest</button>
 </form>
 </body>
 </html>
