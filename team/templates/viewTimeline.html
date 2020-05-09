@@ -5,18 +5,18 @@
 	<style>div{margin: 25px;}</style>
 </head>
 <body>
-<h2>Tasks</h2>
+<h2>Ungraded Tasks</h2>
 <table class="table table-hover">
 	    <tr>
 	        <th>Deadline</th>
-	        <th>Task</th>  
-	        <th>Task Details</th>  
+	        <th>Task</th>
+	        <th>Task Details</th>
 	        <th>Upload</th>
 	        <th>View</th>
 	        <th>Grade</th>
 	    </tr>-
-	{% for task in tasks %}
-		<tr> 
+	{% for task in ungradedTasks %}
+		<tr>
 	        <td>{{ task.deadline }}</td>
 	        <td>{{ task.task }}</td>
 	        <td>{{ task.taskDetails }}</td>
@@ -25,7 +25,31 @@
 	        <td><a class="btn btn-default" href="{% url 'grade' team=task.teamName task=task.task %}"><span class="lyphicon glyphicon-plus"></span></a></td>
 	    </tr>
 
-	{% endfor %}    
+	{% endfor %}
+</table>
+
+<h2>Graded Tasks</h2>
+<table class="table table-hover">
+	    <tr>
+	        <th>Deadline</th>
+	        <th>Task</th>
+	        <th>Task Details</th>
+	        <th>Upload</th>
+	        <th>View</th>
+	        <th>Grade</th>
+	    </tr>-
+	{% for task in gradedTasks %}
+		<tr>
+	        <td>{{ task.deadline }}</td>
+	        <td>{{ task.task }}</td>
+	        <td>{{ task.taskDetails }}</td>
+	        <td><a class="btn btn-default" href="{% url 'upload' team=task.teamName task=task.task %}"><span class="lyphicon glyphicon-plus"></span></a></td>
+	        <td><a class="btn btn-default" href="{% url 'view' team=task.teamName task=task.task %}"><span class="lyphicon glyphicon-plus"></span></a></td>
+	        <td>{{ task.grade }}</td>
+	    </tr>
+
+	{% endfor %}
+</table>
 
 </body>
 </html>

@@ -20,3 +20,6 @@ class TimelineForm(forms.ModelForm):
     class Meta:
         model = Timeline
         fields = ('deadline', 'task','taskDetails')
+
+class GradeForm(forms.Form):
+    grade = forms.CharField(max_length=100)

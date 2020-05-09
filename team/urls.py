@@ -11,6 +11,6 @@ urlpatterns = [
     path('<str:team>/viewTimeline', views.viewTimeline, name='viewTimeline'),
     path('<str:team>/viewMembers',views.viewMembers, name='viewMembers'),
     path('<str:team>/view/', views.viewTeam, name='viewTeam'),
+    path('<str:team>/<str:task>/grade/', views.grade, name='grade'),
     path('<str:team>/<str:task>/', include('upload.urls')),
-    # path('<str:name>/<str:task>/upload1/', include('upload.urls'),name='uploadView'),
 ]
