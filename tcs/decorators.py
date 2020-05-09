@@ -30,8 +30,11 @@ def userIsDeveloper(function):
 def userIsTester(function):
     def wrap(request, *args, **kwargs):
         member = TeamMember.objects.get(Q(teamName = kwargs['team'] ) & Q(userName = request.user ))
-        if member.role == 'Tester':
-            return function(request, *args, **kwargs)
+        tes=Role.objects.get(role="Tester")
+        print("hi")
+        if member.role == tes:
+        	print("bye")
+        	return function(request, *args, **kwargs)
         else:
             raise PermissionDenied
     wrap.__doc__ = function.__doc__

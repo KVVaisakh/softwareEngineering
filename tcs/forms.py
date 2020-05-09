@@ -17,4 +17,10 @@ class UserRegistrationForm(forms.Form):
         max_length = 32,
         widget = forms.PasswordInput()
     )
-    
+
+class OtpForm(forms.Form):
+    otp = forms.CharField(
+        required = True,
+        label = 'OTP',
+        max_length = 6
+    )

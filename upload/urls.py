@@ -6,7 +6,6 @@ urlpatterns = [
     path('view/', views.view, name='view'),
     path('suggest/<str:filename>/<str:uploadedBy>/', views.suggest, name='suggest'),
     path('viewSuggestions/<str:filename>/<str:uploadedBy>/', views.viewSuggestions, name='viewSuggestions'),
-    path('grade/', views.grade, name='grade'),
     path('approve/<str:filename>/<str:uploadedBy>/', views.approve, name='approve'),
     path('viewApprove/<str:filename>/<str:uploadedBy>/', views.viewApprove, name='viewApprove'),
 ]

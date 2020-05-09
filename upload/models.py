@@ -4,21 +4,20 @@ from team.models import Team,Timeline
 from django.utils import timezone
 
 class File(models.Model):
-    name = models.CharField(max_length=255, blank=True)
-    teamName = models.ForeignKey(Team,on_delete=models.CASCADE)
-    task = models.ForeignKey(Timeline,on_delete=models.CASCADE)
-    file = models.FileField(upload_to='uploads/')
-    uploaded_at = models.DateTimeField(default=timezone.now)
-    uploadedBy = models.ForeignKey(User,on_delete=models.CASCADE)
-    grade = models.CharField(max_length=10,null=True)
-    approved = models.CharField(max_length=10,null=True)
+	name = models.CharField(max_length=255, blank=True)
+	teamName = models.ForeignKey(Team,on_delete=models.CASCADE)
+	task = models.ForeignKey(Timeline,on_delete=models.CASCADE)
+	file = models.FileField(upload_to='uploads/')
+	uploaded_at = models.DateTimeField(default=timezone.now)
+	uploadedBy = models.ForeignKey(User,on_delete=models.CASCADE)
+	approved = models.CharField(max_length=10,null=True)
 
-    class Meta:
-    	unique_together = (('name','uploadedBy', 'task'),)
- 
-    def __str__(self):
-    	title=str(self.file.name)
-    	return title
+	class Meta:
+		unique_together = (('name','uploadedBy', 'task'),)
+
+	def __str__(self):
+		title=str(self.file.name)
+		return title
 
 class Suggestion(models.Model):
 	file = models.ForeignKey(File,on_delete=models.CASCADE)
@@ -33,7 +32,7 @@ class Suggestion(models.Model):
 		title=str(self.file.name)+" - "+str(self.suggestedBy)+" - "+str(self.suggestedAt)
 		return title
 
-class Approval(models.Model):	
+class Approval(models.Model):
 	file = models.ForeignKey(File,on_delete=models.CASCADE)
 	approvedBy = models.ForeignKey(User,on_delete=models.CASCADE)
 	approvedAt = models.DateTimeField(auto_now_add=True)
