@@ -13,7 +13,7 @@ from tcs.decorators import *
 
 @login_required
 def index(request):
-	chats=models.DirectMessage.objects.filter(Q(sentFrom=request.user) |  Q(sentTo=request.user)).order_by('created_date').reverse()
+	chats=DirectMessage.objects.filter(Q(sentFrom=request.user) |  Q(sentTo=request.user)).order_by('created_date').reverse()
 	chatList=[]
 	chattedWith=set()
 	companion=""
@@ -33,7 +33,7 @@ def index(request):
 		teams.append(team.teamName)
 	groupChats=[]
 	for team in teams:
-		groupChats.append(models.GroupMessage.objects.filter(Q(sentTo=team)).order_by('-created_date')[:1])
+		groupChats.append(GroupMessage.objects.filter(Q(sentTo=team)).order_by('-created_date')[:1])
 	return render(request, 'chatHistory.html', {'chats':chatList, 'groupChats':groupChats, 'user':request.user})
 
 @login_required
@@ -76,8 +76,8 @@ def continueChat(request,name):
 			chat.save()			
 			return redirect('continueChat',name=name)	
 	else:
-		nameId=models.User.objects.get(username=name)
-		chats=models.DirectMessage.objects.filter((Q(sentFrom=request.user) &  Q(sentTo=nameId)) | (Q(sentFrom=nameId) &  Q(sentTo=request.user))).order_by('created_date')
+		nameId=User.objects.get(username=name)
+		chats=DirectMessage.objects.filter((Q(sentFrom=request.user) &  Q(sentTo=nameId)) | (Q(sentFrom=nameId) &  Q(sentTo=request.user))).order_by('created_date')
 		form=DirectMessageForm(initial={'sentTo':nameId})
 		form.fields['sentTo'].widget = forms.HiddenInput()
 	return render(request, 'message.html', {'form': form,'chats':chats,'name':name})
@@ -94,7 +94,7 @@ def continueGroupChat(request,name):
 			chat.save()			
 			return redirect('continueGroupChat',name=name)	
 	else:
-		chats=models.GroupMessage.objects.filter(Q(sentTo=name)).order_by('created_date')
+		chats=GroupMessage.objects.filter(Q(sentTo=name)).order_by('created_date')
 		form=GroupMessageForm(initial={'sentTo':name})
 		form.fields['sentTo'].widget = forms.HiddenInput()
 	return render(request, 'message.html', {'form': form,'chats':chats,'name':name})
