@@ -10,19 +10,20 @@
 <body>
     <div class="container">
         <header>Signup Form</header>
-        <form>
+        <form method="post">
+            {% csrf_token %}
             <div class="input-field">
-                <input type="text" required>
-                <label>{{form.username}}</label>
+                <input type="text" name="username" required>
+                <label>Username</label>
             </div>
             <div class="input-field">
-                <input type="email" required>
-                <label>{{form.email}}</label>
+                <input type="email" name="Email" required>
+                <label>Email</label>
             </div>
             <div class="input-field">
-                <input class="pswrd" type="password" required>
+                <input class="pswrd" type="password" name="password" required>
                 <span class="show">SHOW</span>
-                <label>{{form.password}}</label>
+                <label>Password</label>
             </div>
             <div class="button">
                 <div class="inner"></div>

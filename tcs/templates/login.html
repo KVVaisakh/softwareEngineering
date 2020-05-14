@@ -10,7 +10,8 @@
 <body>
     <div class="container">
         <header>Login</header>
-        <form method="post">{% csrf_token %}
+        <form method="post">
+            {% csrf_token %}
             <div class="input-field">
                 <input type="text" name="username" required>
                 <label>Username</label>

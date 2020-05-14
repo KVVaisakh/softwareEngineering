@@ -9,9 +9,30 @@ from tcs.email import *
 from django.shortcuts import redirect
 from django.core import signing
 from django.views.decorators.cache import cache_control
+from django.contrib.auth.decorators import *
 import random
 
 def index(request):
+	if request.method == 'POST':
+		form=LoginForm(request.POST)
+		if form.is_valid():
+			user = form.cleaned_data
+			username = user['username']
+			password =  user['password']
+			user = authenticate(username = username, password = password)
+			if user:
+				login(request, user)
+				return redirect('home',username=username)
+			else:
+				return HttpResponse('Blocked')
+		else:
+			return HttpResponse('Blocked')
+	else:
+		form=LoginForm()
+	return render(request, 'index.html', {'form':form})
+
+@login_required
+def home(request,username):
 	return render(request, 'home1.html', {})
 
 def register(request):
@@ -33,7 +54,7 @@ def register(request):
 				return render(request, 'register1.html', {'form' : form, 'error':"username/emailid already exists"})
 	else:
 		form = UserRegistrationForm()
-	return render(request, 'register1.html', {'form' : form})
+	return render(request, 'register.html', {'form' : form})
 
 def otpVerification(request,otp,username, email, password):
 	if request.session.has_key('username'):
