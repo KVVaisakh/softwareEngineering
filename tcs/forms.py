@@ -3,17 +3,17 @@ from django import forms
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(
         required = True,
-        label = 'Username',
+        label = 'username',
         max_length = 32
     )
     email = forms.CharField(
         required = True,
-        label = 'Email',
+        label = 'email',
         max_length = 32,
     )
     password = forms.CharField(
         required = True,
-        label = 'Password',
+        label = 'password',
         max_length = 32,
         widget = forms.PasswordInput()
     )

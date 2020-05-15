@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect,HttpResponse
-from django import forms
 from .forms import *
 from django.core.mail import EmailMultiAlternatives
 from tcs.email import *
@@ -40,14 +39,18 @@ def home(request,username):
 def register(request):
 	if request.method == 'POST':
 		form = UserRegistrationForm(request.POST)
+		print("hi1")
 		if form.is_valid():
+			print("hi2")
 			user = form.cleaned_data
 			username = user['username']
 			email =  user['email']
 			password =  user['password']
 			if not (User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists()):
 				otp=random.randint(100000,999999)
-				sendWelcome(email,otp)
+				print("3")
+				sendWelcome([email],otp)
+				print("4")
 				otp=signing.dumps(otp, key='sekrit')
 				password=signing.dumps(password, key='sekrit')
 				request.session['username']=username

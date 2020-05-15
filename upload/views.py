@@ -10,6 +10,11 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from tcs.decorators import *
 from .decorators import *
+from wsgiref.util import FileWrapper
+import mimetypes
+from django.contrib.auth.models import User
+import os
+from django.utils.encoding import smart_str
 
 @login_required
 @userIsMember
@@ -27,8 +32,8 @@ def index(request,team,task):
 				file.uploadedBy = request.user
 				if File.objects.filter(Q(name=file.name) & Q(task=file.task) & Q(uploadedBy=file.uploadedBy)):
 					return render(request, 'upload.html', {'form': form,'name1':team,'task1':task})
-					file.save()
-					return redirect('viewTimeline',team=team)
+				file.save()
+				return redirect('viewTimeline',team=team)
 		else:
 			form = ModelFormWithFileField()
 			return render(request, 'upload.html', {'form': form,'name1':team,'task1':task})
@@ -68,6 +73,21 @@ def view(request,team,task):
 
 	root = settings.MEDIA_URL
 	return render(request, 'view.html', {'pendingFiles':pfiles,'acceptedFiles':afiles,'rejectedFiles':rfiles , 'root':root,})
+
+@login_required
+@userIsMember
+def download(request,team,filename,task,uploadedBy):
+	user=User.objects.get(username=uploadedBy)
+	taskModel= Timeline.objects.get(Q(teamName=team) & Q(task=task))
+	file=File.objects.get(Q(name=filename) &Q(uploadedBy=user) & Q(task=taskModel))
+	filePath = settings.MEDIA_ROOT +'/'+ file.file.name
+	file_wrapper = FileWrapper(open(filePath,'rb'))
+	file_mimetype = mimetypes.guess_type(filePath)
+	response = HttpResponse(file_wrapper, content_type=file_mimetype )
+	response['X-Sendfile'] = filePath
+	response['Content-Length'] = os.stat(filePath).st_size
+	response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(filename+"."+file.file.name.split(".")[-1])
+	return response
 
 @login_required
 @userIsMember

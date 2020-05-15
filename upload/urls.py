@@ -8,4 +8,5 @@ urlpatterns = [
     path('viewSuggestions/<str:filename>/<str:uploadedBy>/', views.viewSuggestions, name='viewSuggestions'),
     path('approve/<str:filename>/<str:uploadedBy>/', views.approve, name='approve'),
     path('viewApprove/<str:filename>/<str:uploadedBy>/', views.viewApprove, name='viewApprove'),
+    path('download/<str:filename>/<str:uploadedBy>/', views.download, name='download'),
 ]

@@ -26,7 +26,7 @@
 	        <td>{{ file.name }}</td>
 	        <td>{{ file.uploaded_at }}</td>
 	        <td>{{ file.uploadedBy }}</td>
-	        <td><a class="btn btn-default" href="{{root}}{{file}}"><span class="lyphicon glyphicon-plus"></span></a></td>
+	        <td><a class="btn btn-default" href="{% url 'download' team=file.teamName task=file.task.task filename=file.name uploadedBy=file.uploadedBy%}"><span class="lyphicon glyphicon-plus"></span></a></td>
 
 
 	        <td><a class="btn btn-default" href="{% url 'suggest' team=file.teamName task=file.task.task filename=file.name uploadedBy=file.uploadedBy%}"><span class="lyphicon glyphicon-plus"></span></a></td>
