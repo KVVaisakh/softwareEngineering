@@ -18,12 +18,29 @@ from tcs.email import *
 
 @login_required
 def index(request):
-	teamList=models.TeamMember.objects.filter(userName=request.user)
-	print(teamList)
-	teams=[]
-	for team in teamList:
-		teams.append(models.Team.objects.get(teamName = team.teamName))
-	return render(request, 'viewTeams.html', {'teams':teams,'user':request.user})
+	if request.method == "POST":
+		form = TeamForm(request.POST)
+		if form.is_valid():
+			team=form.save(commit=False)
+			team.created_date=timezone.now()
+			team.teamLeader=request.user
+			team.save()
+			tl=models.Role.objects.get(role="Team Leader")
+			member=TeamMember(teamName=team,userName=request.user,role=tl)
+			addToTeam([request.user.email],member)
+			member.save()
+			return redirect('addMembers',team=team.teamName)
+		else:
+			return render(request, 'errorconnected.html')
+	else:
+		form = TeamForm(initial={'teamLeader':request.user})
+		form.fields['teamLeader'].widget = forms.HiddenInput()
+		teamList=models.TeamMember.objects.filter(userName=request.user)
+		print(teamList)
+		teams=[]
+		for team in teamList:
+			teams.append(models.Team.objects.get(teamName = team.teamName))
+		return render(request, 'viewTeams.html', {'teams':teams,'user':request.user,'form': form,})
 
 @login_required
 def newTeam(request):
@@ -100,39 +117,52 @@ def viewMembers(request,team):
 @userIsMember
 @userIsTeamLeader
 def editTeam(request, team):
-	teamModel = get_object_or_404(models.Team, teamName=team)
+	teamModel = models.Team.objects.get(teamName=team)
 	oldTeamLeader=teamModel.teamLeader
 	if request.method == "POST":
-		form = TeamForm(request.POST,instance=teamModel)
+		form = TeamForm2(request.POST)
 		if form.is_valid():
-			newTeam = form.save(commit=False)
-			newTeam.save()
-			if teamModel.teamName!=newTeam.teamName:
+			newTeam = form.cleaned_data
+			print(newTeam['teamName']+" hi "+teamModel.teamName)
+			if teamModel.teamName!=newTeam['teamName']:
+				Team.objects.create(teamName=newTeam['teamName'],directoryLink=newTeam['directoryLink'],teamLeader=newTeam['teamLeader'])
+				print(newTeam['teamName']+"bi")
 				memberList = models.TeamMember.objects.filter(teamName=team)
 				for member in memberList:
-					member.teamName=Team.objects.get(teamName=newTeam.teamName)
+					member.teamName=models.Team.objects.get(teamName=newTeam['teamName'])
 					member.save()
 				teamModel.delete()
-			if oldTeamLeader!=newTeam.teamLeader:
+			print("directory "+teamModel.directoryLink+" "+newTeam['directoryLink'])
+			newModel = models.Team.objects.get(teamName=newTeam['teamName'])
+			if teamModel.directoryLink!=newTeam['directoryLink']:
+				newModel.directoryLink=newTeam['directoryLink']
+				newModel.save()
+			if teamModel.teamLeader!=newTeam['teamLeader']:
+				newModel.teamLeader=newTeam['teamLeader']
+				newModel.save()
+			if oldTeamLeader!=newTeam['teamLeader']:
 				print("leader changed")
-				leader = models.TeamMember.objects.filter(Q(teamName=newTeam.teamName) & Q(userName=request.user))
+				leader = models.TeamMember.objects.filter(Q(teamName=newTeam['teamName']) & Q(userName=request.user))
 				removedFromTeam([oldTeamLeader.email],team)
 				leader.delete()
-				existingMember=models.TeamMember.objects.get(Q(userName=newTeam.teamLeader) & Q(teamName=newTeam.teamName))
+				existingMember=models.TeamMember.objects.filter(Q(userName=newTeam['teamLeader']) & Q(teamName=newTeam['teamName']))
 				if existingMember:
+					existingMember=models.TeamMember.objects.get(Q(userName=newTeam['teamLeader']) & Q(teamName=newTeam['teamName']))
 					existingMember.role=models.Role.objects.get(role='Team Leader')
 					existingMember.save()
-					addToTeam([newTeam.teamLeader.email],existingMember)
+					addToTeam([newTeam['teamLeader'].email],existingMember)
 				else:
-					form2 = TeamMemberForm({'userName':newTeam.teamLeader,'role':models.Role.objects.get(role='Team Leader')})
+					form2 = TeamMemberForm2({'userName':newTeam['teamLeader'],'role':models.Role.objects.get(role='Team Leader')})
 					if form2.is_valid():
 						teamMembers=form2.save(commit=False)
-						teamMembers.teamName=Team.objects.get(teamName=newTeam.teamName)
+						teamMembers.teamName=models.Team.objects.get(teamName=newTeam['teamName'])
 						teamMembers.save()
-						addToTeam([newTeam.teamLeader.email],teamMembers)
+						addToTeam([newTeam['teamLeader'].email],teamMembers)
 			return redirect('team')
+		else:
+			return HttpResponse('validation failed')
 	else:
-		form = TeamForm(instance=teamModel)
+		form = TeamForm2(initial={'teamName':teamModel.teamName,'teamLeader':teamModel.teamLeader,'directoryLink':teamModel.directoryLink})
 	return render(request, 'teamDisplay.html', {'form': form ,})
 
 @login_required
@@ -185,21 +215,21 @@ def viewTimeline(request,team):
 @userIsTeamLeader
 def grade(request,team,task):
 	taskModel= models.Timeline.objects.get(Q(teamName=team) & Q(task=task) )
-	acc=M.File.objects.filter(Q(teamName=team) & Q(task=task) & Q(approved='yes'))
-	# if acc:
-	if request.method == 'POST':
-		form = GradeForm(request.POST)
-		if form.is_valid():
-			taskModel.grade=form.cleaned_data["grade"]
-			taskModel.save()
-			members=models.TeamMember.objects.filter( teamName=team )
-			email=[]
-			for member in members:
-				email.append(User.objects.get(username=member.userName).email )
-			graded(email,taskModel)
-			return redirect('viewTimeline',team=team)
+	acc=M.File.objects.filter(Q(teamName=team) & Q(task=taskModel) & Q(approved='yes'))
+	if acc:
+		if request.method == 'POST':
+			form = GradeForm(request.POST)
+			if form.is_valid():
+				taskModel.grade=form.cleaned_data["grade"]
+				taskModel.save()
+				members=models.TeamMember.objects.filter( teamName=team )
+				email=[]
+				for member in members:
+					email.append(User.objects.get(username=member.userName).email )
+				graded(email,taskModel)
+				return redirect('viewTimeline',team=team)
+		else:
+			form = GradeForm()
+		return render(request, 'grade.html', {'form':form,})
 	else:
-		form = GradeForm()
-	return render(request, 'grade.html', {'form':form,})
-	# else:
-	# 	return HttpResponse("Not Accepted till now")
+		return HttpResponse("Not Accepted till now")

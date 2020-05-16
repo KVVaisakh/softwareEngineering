@@ -5,19 +5,19 @@
 	<style>div{margin: 25px;}</style>
 </head>
 <body>
-<h2>Members</h2>
+<body >
 <table class="table table-hover">
 	    <tr>
 	        <th>Name</th>
-	        <th>Role</th>  
+	        <th>Role</th>
 	    </tr>
 	{% for member in memberList %}
-		<tr> 
+		<tr>
 	        <td>{{ member.userName }}</td>
 	        <td>{{ member.role }}</td>
 	    </tr>
 
-	{% endfor %}    
+	{% endfor %}
 
 </body>
 </html>

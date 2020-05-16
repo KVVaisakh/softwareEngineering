@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <header>Signup Form</header>
-        <form method="post">
+        <form enctype="multipart/form-data" method="post">
             {% csrf_token %}
             <div class="input-field">
                 <input type="text" name="username" required>

@@ -34,9 +34,11 @@ def index(request,team,task):
 					return render(request, 'upload.html', {'form': form,'name1':team,'task1':task})
 				file.save()
 				return redirect('viewTimeline',team=team)
+			else:
+				return render(request, 'errorconnected.html')
 		else:
 			form = ModelFormWithFileField()
-			return render(request, 'upload.html', {'form': form,'name1':team,'task1':task})
+			return render(request, 'uploadOld.html', {'form': form,'name1':team,'task1':task})
 	else:
 		return HttpResponse("Already Graded")
 

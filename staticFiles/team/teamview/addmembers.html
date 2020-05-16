@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js"></script>
+    <link rel="stylesheet" href="team.css">
+</head>
+<body>
+    <div class="container">
+        <header>Add Members</header>
+        <form class="link-formset">
+            <div class="input-field ">
+                <h1 class="letters">Username</h1>
+                <select id="" class="ibox">
+                    <option value="name1">name1</option>
+                    <option value="name1">name2</option>
+                    <option value="name1">name3</option>
+                    <option value="name1">name4</option>
+                </select>       
+            </div>
+            <div class="input-field">
+                <h1 class="letters">Role</h1>
+                <select id="" class="ibox">
+                    <option value="name1">name1</option>
+                    <option value="name1">name2</option>
+                    <option value="name1">name3</option>
+                    <option value="name1">name4</option>
+                </select>           
+            </div>
+            <div class="twob">
+                <button class="twon">Remove</button>
+              </div>
+           
+        </form>
+        <button class="twon">Add </button>
+        <div class="button">
+            <div class="inner"></div>
+            <button class= "save">Save</button>
+        </div>
+    </div>    
+    <script>
+        $('.link-formset').formset({
+            addText: 'Add Members',
+            deleteText: 'Remove Member'
+        });
+    </script>
+</body>
+</html>

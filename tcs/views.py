@@ -9,7 +9,10 @@ from django.shortcuts import redirect
 from django.core import signing
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import *
+from team.models import UserDetail
+from team.forms import UserDetailForm
 import random
+from .settings import MEDIA_ROOT, MEDIA_URL
 
 def index(request):
 	if request.method == 'POST':
@@ -23,9 +26,9 @@ def index(request):
 				login(request, user)
 				return redirect('home',username=username)
 			else:
-				return HttpResponse('Blocked')
+				return render(request, 'errorconnected.html')
 		else:
-			return HttpResponse('Blocked')
+			return render(request, 'errorconnected.html')
 	else:
 		if request.user.is_authenticated:
 			return redirect('home',username=request.user.username)
@@ -34,7 +37,9 @@ def index(request):
 
 @login_required
 def home(request,username):
-	return render(request, 'home1.html', {})
+	details=UserDetail.objects.get(user=request.user)
+	print(MEDIA_URL)
+	return render(request, 'home1.html', {'details':details,'media_url': MEDIA_URL})
 
 def register(request):
 	if request.method == 'POST':
@@ -48,9 +53,7 @@ def register(request):
 			password =  user['password']
 			if not (User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists()):
 				otp=random.randint(100000,999999)
-				print("3")
 				sendWelcome([email],otp)
-				print("4")
 				otp=signing.dumps(otp, key='sekrit')
 				password=signing.dumps(password, key='sekrit')
 				request.session['username']=username
@@ -73,12 +76,27 @@ def otpVerification(request,otp,username, email, password):
 					User.objects.create_user(username, email, password)
 					user = authenticate(username = username, password = password)
 					login(request, user)
-					return HttpResponseRedirect('/')
+					return redirect('details')
 				else:
 					del request.session['username']
-					return HttpResponse('OTP mismatch')
+					return render(request, 'otperror.html')
 		else:
 			form = OtpForm()
 		return render(request, 'otp.html', {'form' : form})
 	else:
-		return HttpResponse('Blocked')
+		return render(request, 'errorconnected.html')
+
+def details(request):
+	if request.method == 'POST':
+		form = UserDetailForm(request.POST,request.FILES)
+		if form.is_valid():
+			details=form.save(commit=False)
+			details.photo.name = request.user.username+"/"+details.photo.name
+			details.user=request.user
+			details.save()
+		else:
+			return render(request, 'errorconnected.html')
+		return HttpResponseRedirect('/')
+	else:
+		form = UserDetailForm()
+	return render(request, 'details.html', {'form' : form})

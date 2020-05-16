@@ -6,7 +6,7 @@ from django.utils import timezone
 class Team(models.Model):
 	teamName = models.CharField(primary_key=True,max_length=200)
 	teamLeader = models.ForeignKey(User,on_delete=models.CASCADE)
-	directoryLink = models.CharField(unique=True,max_length=200)
+	directoryLink = models.CharField(max_length=200)
 	created_date = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
@@ -43,3 +43,14 @@ class Timeline(models.Model):
 	def __str__(self):
 		title=str(self.task)+" - "+str(self.teamName)
 		return title
+
+class UserDetail(models.Model):
+	mobile = models.CharField(max_length=15)
+	address = models.CharField(max_length=100)
+	photo = models.ImageField(upload_to='uploads/')
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	dob = models.DateTimeField(default=timezone.now)
+	created_date = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return self.user.username

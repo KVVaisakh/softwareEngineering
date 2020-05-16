@@ -31,4 +31,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('team/', include('team.urls')),
     path('chat/', include('chat.urls')),
-]
+	path('details/',views.details,name='details'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

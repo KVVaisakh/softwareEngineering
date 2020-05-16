@@ -17,19 +17,19 @@ body{
     background: url(../img/last.jpg);
     background-size: cover;
     background-position: center;
-  
+
 }
 
 .container{
     position: relative;
-    width: 400px;
+    width: 600px;
     background: white;
     padding: 60px 40px;
 }
 
 header{
     font-size: 40px;
-    margin-bottom: 60px;
+    margin-bottom: 0px;
     font-family: 'Montserrat', sans-serif;
     font-weight: bolder;
 }
@@ -119,4 +119,3 @@ form .button{
     text-decoration: underline;
 
 }
-
